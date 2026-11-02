@@ -23,16 +23,50 @@
       }
     })
     AFRAME.registerComponent('growable', {
+      schema: {
+        from:     { type: 'vec3',   default: { x: 1, y: 1, z: 1 } },
+        to:       { type: 'vec3',   default: { x: 1.5, y: 1.5, z: 1.5 } },
+        dur:      { type: 'number', default: 3000 },
+        easing:   { type: 'string', default: 'easeOutQuad' },
+        once:     { type: 'boolean', default: true }
+      },
+
       init: function () {
-        let el = this.el;
-        el.addEventListener('mouseenter', function (){
-          el.setAttribute("scale", "1.5 1.5 1.5");
-        })
-        el.addEventListener('mouseleave', function (){
-          el.setAttribute("scale", "1 1 1");
-        })
-      }
-    })
+        const el = this.el;
+        const data = this.data;
+        this.growing = false;
+        this.hasGrown = false;
+
+        this.onEnter = () => {
+          if (this.growing || (data.once && this.hasGrown)) return;
+          this.growing = true;
+
+          el.setAttribute('scale', data.from);
+          
+          el.setAttribute('animation__grow', {
+            property: 'scale',
+            from: `${data.from.x} ${data.from.y} ${data.from.z}`,
+            to:   `${data.to.x} ${data.to.y} ${data.to.z}`,
+            dur: data.dur,
+            easing: data.easing,
+            loop: false
+          });
+        };
+
+        this.onComplete = () => {
+          this.growing = false;
+          this.hasGrown = true;
+        };
+
+        el.addEventListener('mouseenter', this.onEnter);
+        el.addEventListener('animationcomplete__grow', this.onComplete);
+      },
+
+      remove: function () {
+        this.el.removeEventListener('mouseenter', this.onEnter);
+        this.el.removeEventListener('animationcomplete__grow', this.onComplete);
+  }
+});
   </script>
   <a-scene stats>
     <a-assets>
