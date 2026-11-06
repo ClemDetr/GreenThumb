@@ -7,6 +7,58 @@
     <script src="https://aframe.io/releases/1.8.0/aframe.min.js"></script>
 </head>
 <body>
+    <script>
+        AFRAME.registerComponent('growable', {
+      schema: {
+        from:     { type: 'vec3',   default: { x: 1, y: 1, z: 1 } },
+        to:       { type: 'vec3',   default: { x: 1.5, y: 1.5, z: 1.5 } },
+        dur:      { type: 'number', default: 3000 },
+        easing:   { type: 'string', default: 'easeOutQuad' },
+        once:     { type: 'boolean', default: true }
+      },
+
+      init: function () {
+        const el = this.el;
+        const data = this.data;
+        this.growing = false;
+        this.hasGrown = false;
+
+        this.onClick = () => {
+          if (this.growing || (data.once && this.hasGrown)) return;
+          this.growing = true;
+
+          el.setAttribute('scale', data.from);
+          
+          el.setAttribute('animation__grow', {
+            property: 'scale',
+            from: `${data.from.x} ${data.from.y} ${data.from.z}`,
+            to:   `${data.to.x} ${data.to.y} ${data.to.z}`,
+            dur: data.dur,
+            easing: data.easing,
+            loop: false
+          });
+        };
+
+        this.onComplete = () => {
+          this.growing = false;
+          this.hasGrown = true;
+        };
+
+        el.addEventListener('mouseclick', this.onClick);
+        el.addEventListener('animationcomplete__grow', this.onComplete);
+      },
+
+      remove: function () {
+        this.el.removeEventListener('mouseclick', this.onEnter);
+        this.el.removeEventListener('animationcomplete__grow', this.onComplete);
+    }
+    });
+    </script>
+    <a-scene stats>
+        <a-assets>
+            <a-asset-item id="glasshouse" src="assets/VRexp26.glb"></a-asset-item>
+        </a-assets>
+    </a-scene>
     
 </body>
 </html>
