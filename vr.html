@@ -67,13 +67,17 @@
         </a-assets>
 
         <a-camera>
-          <a-entity id="curseur" cursor="fuse:true; fuseTimeout:1500" position="0 0 -1" geometry="primitive:sphere; radius:0.01" material="color: black; shader: flat; opacity: 0.5"></a-entity>
+          <a-entity id="curseur" cursor="fuse:true; fuseTimeout:1500" position="0 0 -0.3" geometry="primitive:sphere; radius:0.01" material="color: black; shader: flat; opacity: 0.5"></a-entity>
         </a-camera>
 
         <a-entity gltf-model="#glasshouse" position="0 0 0" scale="0.9 0.9 0.9" rotation="0 90 0">
           <a-entity gltf-model="#plant2" position="-0.235 0.348 -2.829" scale="0.5 0.5 0.5" growable></a-entity>
           <a-entity gltf-model="#plant2" position="-3.856 0.365 2.749" scale="0.5 0.5 0.5" growable></a-entity>
-        
+          <a-entity gltf-model="#plant1" position="-2.313 1.469 -3.813" scale="0.5 0.5 0.5" rotation="0 -174 0" growable></a-entity>
+          <a-entity gltf-model="#flower1" position="3.927 0.483 -3.984" scale="0.5 0.5 0.5" growable></a-entity>
+          <a-entity gltf-model="#flower2" position="0.696 1.528 -3.796" scale="0.5 0.5 0.5" growable></a-entity>
+          <a-entity gltf-model="#flower2" position="-3.584 1.449 -3.559" scale="0.5 0.5 0.5" growable></a-entity>
+          <a-entity gltf-model="#tree1" position="4.154 0.358 3.715" scale="0.5 0.5 0.5" rotation="0 -84 0" growable></a-entity>
         </a-entity>
         <a-entity gltf-model="#outside" position="0 0 0" scale="0.9 0.9 0.9" rotation="0 90 0"></a-entity>
         <a-sky color="blue"></a-sky>
