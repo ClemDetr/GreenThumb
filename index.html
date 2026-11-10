@@ -1,31 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>A frame scene</title>
-  <script src="https://aframe.io/releases/1.8.0/aframe.min.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Green Thumb</title>
+    <script src="https://aframe.io/releases/1.8.0/aframe.min.js"></script>
 </head>
 <body>
-  <script>
-    AFRAME.registerComponent('palette', {
-      init: function () {
-        //appel referentiel
-        let el = this.el;
-        //récupérer la couleur de l'objet
-        let color = el.getAttribute('material').color;
-
-        //ajouter le comportement
-        el.addEventListener('mouseenter', function (){
-          couleurSelected = color;
-          document.querySelector("#curseur").setAttribute("material", "color", couleurSelected);
-        })
-      }
-    })
-    AFRAME.registerComponent('growable', {
+    <script>
+        AFRAME.registerComponent('growable', {
       schema: {
-        from:     { type: 'vec3',   default: { x: 1, y: 1, z: 1 } },
-        to:       { type: 'vec3',   default: { x: 1.5, y: 1.5, z: 1.5 } },
+        from:     { type: 'vec3',   default: { x: 0.5, y: 0.5, z: 0.5 } },
+        to:       { type: 'vec3',   default: { x: 1.8, y: 1.8, z: 1.8 } },
         dur:      { type: 'number', default: 3000 },
         easing:   { type: 'string', default: 'easeOutQuad' },
         once:     { type: 'boolean', default: true }
@@ -37,7 +23,7 @@
         this.growing = false;
         this.hasGrown = false;
 
-        this.onEnter = () => {
+        this.onClick = () => {
           if (this.growing || (data.once && this.hasGrown)) return;
           this.growing = true;
 
@@ -58,121 +44,66 @@
           this.hasGrown = true;
         };
 
-        el.addEventListener('mouseenter', this.onEnter);
+        el.addEventListener('click', this.onClick);
         el.addEventListener('animationcomplete__grow', this.onComplete);
       },
 
       remove: function () {
-        this.el.removeEventListener('mouseenter', this.onEnter);
+        this.el.removeEventListener('click', this.onClick);
         this.el.removeEventListener('animationcomplete__grow', this.onComplete);
-  }
-});
-  </script>
-  <a-scene stats>
-    <a-assets>
-        <a-asset-item id="well_model" src="assets/well.glb"> </a-asset-item>
-        <a-asset-item id="glasshouse" src="assets/serre.glb"></a-asset-item>
-        <a-asset-item id="cat" src="assets/cat_in_flowers.glb"></a-asset-item>
-    </a-assets>
-
-    <a-camera>
-      <a-entity id="curseur" cursor="fuse:true; fuseTimeout:500" position="0 0 -1" geometry="primitive:sphere; radius:0.01" material="color: black; shader: flat; opacity: 0.5"></a-entity>
-    </a-camera>
-
-    <!--palette de couleurs-->
-    <a-entity id="palette" position="-1.5 1.5 -3">
-      <a-box position="0 0 0" color="#d21e1e" scale="0.2 0.2 0.2" palette></a-box>
-      <a-box position="0.3 0 0" color="blue" scale="0.2 0.2 0.2" palette></a-box>
-      <a-box position="0.6 0 0" color="green" scale="0.2 0.2 0.2" palette></a-box>
-      <a-box position="0.9 0 0" color="yellow" scale="0.2 0.2 0.2" palette></a-box>
-      <a-box position="1.2 0 0" color="orange" scale="0.2 0.2 0.2" palette></a-box>
-      <a-box position="1.5 0 0" color="purple" scale="0.2 0.2 0.2" palette></a-box>
-
-    </a-entity>
-
-    <a-entity id="red_car" 
-    animation="
-    dur: 10000; 
-    easing: easeOutQuad; 
-    loop: true; 
-    property: 
-    position; to: 60 0.4 -5"  
-    position="-60 0.4 -5">
-      <a-box position="0 0.2 0" rotation="0 90 0" color="#d21e1e" scale="2 0.7 5" material="metalness: 0.5" geometry="depth: 0.97; height: 0.95">
-        <a-box position="0 0.85 0" rotation="0 90 0" color="#d21e1e" scale="0.95 0.7 0.6" material="metalness: 0.5" geometry="depth: 1.38; height: 1.31; width: 0.72"></a-box>
-      </a-box>
-      <a-cylinder position="1 0 0" rotation="90 0 0" radius="0.3" height="2.1" color="#1f1e1e"></a-cylinder>
-      <a-cylinder position="-1 0 0" rotation="90 0 0" radius="0.3" height="2.1" color="#1f1e1e"></a-cylinder>
-      <a-cylinder position="2.004 0.098 -0.653" rotation="0 0 90" radius="0.3" height="1" color="yellow" scale="0.529 1 0.838">
-        <a-light type="spot" color="yellow" intensity="5" distance="10" decay="2" position="-0.005 -0.262 0.019" light="angle: 40; decay: 1.04; distance: 9.34; intensity: 15; penumbra: 0.36" rotation="-84.45397900228335 -30.882425157551374 -148.96902673401405"></a-light>
-      </a-cylinder>
-      <a-cylinder position="2.004 0.098 0.649" rotation="0 0 90" radius="0.3" height="1" color="yellow" scale="0.529 1 0.838">
-        <a-light type="spot" color="yellow" intensity="5" distance="10" decay="2" position="-0.005 -0.262 0.019" light="angle: 40; decay: 1.04; distance: 9.34; intensity: 15; penumbra: 0.36" rotation="-84.45397900228335 -30.882425157551374 -148.96902673401405"></a-light>
-      </a-cylinder>
-      <a-cylinder position="-2.381 0.252 0.727" rotation="0 0 90" radius="0.3" height="1" color="red" scale="0.445 0.223 0.366" material="color: red; emissive: #ee1b1b">
-        <a-light type="spot" color="red" intensity="5" distance="10" decay="2" position="-0.005 -0.262 0.019" light="angle: 90; color: red; decay: 0.53; distance: 2.42; intensity: 15; penumbra: 1" rotation="83.99561276617868 37.872510258147415 38.044397596686665"></a-light>
-      </a-cylinder>
-      <a-cylinder position="-2.381 0.252 -0.653" rotation="0 0 90" radius="0.3" height="1" color="red" scale="0.445 0.223 0.366" material="color: red; emissive: #ee1b1b">
-        <a-light type="spot" color="red" intensity="5" distance="10" decay="2" position="-0.005 -0.262 0.019" light="angle: 90; color: red; decay: 0.53; distance: 2.42; intensity: 15; penumbra: 1" rotation="83.99561276617868 37.872510258147415 38.044397596686665"></a-light>
-      </a-cylinder>
-    </a-entity>
-
-    <a-entity id="blue_car" 
-    animation="
-    dur: 10000; 
-    easing: easeOutQuad; 
-    loop: true; 
-    property: position; 
-    to: -60 0.4 -10" 
-    position="60 0.4 -10">
-      <a-box position="0 0.191 0" rotation="0 90 0" color="blue" scale="2 0.7 3.905" material="metalness: 0.5">
-        <a-box position="0 0.85 0" rotation="0 90 0" color="blue" scale="0.652 0.7 0.831" material="metalness: 0.5"></a-box>
-      </a-box>
-      <a-cylinder position="1 0 0" rotation="90 0 0" radius="0.3" height="2.1" color="#1f1e1e"></a-cylinder>
-      <a-cylinder position="-1 0 0" rotation="90 0 0" radius="0.3" height="2.1" color="#1f1e1e"></a-cylinder>
-      <a-cylinder position="-1.495 0.098 0.649" rotation="0 0 90" radius="0.3" height="1" color="yellow" scale="0.529 1 0.838">
-        <a-light type="spot" color="yellow" intensity="5" distance="10" decay="2" position="-0.005 0.361 0" light="angle: 40; decay: 1.04; distance: 9.34; intensity: 4.91; penumbra: 0.36" rotation="85.2561199154665 0 0"></a-light>
-      </a-cylinder>
-      <a-cylinder position="-1.488 0.098 -0.626" rotation="0 0 90" radius="0.3" height="1" color="yellow" scale="0.529 1 0.838">
-        <a-light type="spot" color="yellow" intensity="5" distance="10" decay="2" position="-0.005 0.361 0.019" light="angle: 40; decay: 1.04; distance: 9.34; intensity: 4.91; penumbra: 0.36" rotation="85.2561199154665 0 0"></a-light>
-      </a-cylinder>
-      <a-cylinder position="1.485 0.273 -0.681" rotation="0 0 90" radius="0.3" height="1" color="yellow" scale="0.513 1 0.392" material="color: red; emissive: #db2424">
-        <a-light type="spot" color="yellow" intensity="5" distance="10" decay="2" position="-0.005 -0.452 0.019" light="angle: 90; color: red; decay: 1.23; distance: 3.62; intensity: 15; penumbra: 1" rotation="-79.6984293026975 62.50969544877281 117.11257332474027"></a-light>
-      </a-cylinder>
-      <a-cylinder position="1.485 0.274 0.685" rotation="0 0 90" radius="0.3" height="1" color="yellow" scale="0.513 1 0.392" material="color: red; emissive: #db2424">
-        <a-light type="spot" color="yellow" intensity="5" distance="10" decay="2" position="-0.005 -0.452 0.019" light="angle: 90; color: red; decay: 1.23; distance: 3.62; intensity: 15; penumbra: 1" rotation="-79.6984293026975 62.50969544877281 117.11257332474027"></a-light>
-      </a-cylinder>
-    </a-entity>
-
-    <a-entity id="well" gltf-model="#well_model" position="0 0 14" animation="property: rotation; to: 0 360 0; dur: 5000; loop: true; easing:linear;"></a-entity>
-    <a-entity id="glasshouse" gltf-model="#glasshouse" position="0 0 -20" rotation="0 90 0" obb-collider=""></a-entity>
-    <a-entity id="cat" gltf-model="assets/cat_in_flowers.glb" position="0.466 1.315 -19.437" rotation="0 32.887777440509254 0" obb-collider="centerModel: true" growable=""></a-entity>
-
-    <a-plane position="0 0 -8" rotation="-90 90 0" width="9" height="120" color="grey" obb-collider=""></a-plane>
-
-    <a-entity light="angle: 40; color: #e6e6c1; decay: 0.77; intensity: 15; penumbra: 0.13; type: spot" position="0 6.235 -11.033" rotation="-67.15065358933248 0 0"></a-entity>
-    <a-entity id="light" light="color: #a2a5a1; intensity: 5.38; type: ambient" position="0 6.902 0"></a-entity>
-    <a-entity light="color: #c36628; decay: 0.54; intensity: 50; penumbra: 0.68; type: spot; castShadow: true; target: #well" id="spot1-2" position="-2.635 3.181 9.98"></a-entity>
-  </a-scene>
-  <script>
-    for(let i=0; i<10; i++){
-      for(let j=0; j<10; j++){
-        let cube = document.createElement("a-box");
-        cube.setAttribute("position", `${i} ${j} 5`);
-        cube.setAttribute("color", "grey");
-        cube.setAttribute("width", "0.85");
-        cube.setAttribute("height", "0.85");
-        cube.setAttribute("depth", "0.1");
-        cube.setAttribute("material", "metalness: 0.5");
-
-        //add event listener to change color on click
-        cube.addEventListener("click", function(){
-          cube.setAttribute("color", couleurSelected);
-        });
-
-        document.querySelector("a-scene").appendChild(cube);
-      }
     }
-  </script>
+    });
+    </script>
+    <a-scene stats>
+        <a-assets>
+            <a-asset-item id="glasshouse" src="assets/serre.glb"></a-asset-item>
+            <a-asset-item id="outside" src="assets/outside.glb"></a-asset-item>
+            <a-asset-item id="flower1" src="assets/flower1.glb"></a-asset-item>
+            <a-asset-item id="flower2" src="assets/flower2.glb"></a-asset-item>
+            <a-asset-item id="flower3" src="assets/flower3.glb"></a-asset-item>
+            <a-asset-item id="flower4" src="assets/flower4.glb"></a-asset-item>
+            <a-asset-item id="flower5" src="assets/flower5.glb"></a-asset-item>
+            <a-asset-item id="flower6" src="assets/flower6.glb"></a-asset-item>
+            <a-asset-item id="flower7" src="assets/flower7.glb"></a-asset-item>
+            <a-asset-item id="flower8" src="assets/flower8.glb"></a-asset-item>
+            <a-asset-item id="plant1" src="assets/plant1.glb"></a-asset-item>
+            <a-asset-item id="plant2" src="assets/plant2.glb"></a-asset-item>
+            <a-asset-item id="cactus1" src="assets/cactus1.glb"></a-asset-item>
+            <a-asset-item id="cactus2" src="assets/cactus2.glb"></a-asset-item>
+            <a-asset-item id="tree1" src="assets/tree1.glb"></a-asset-item>
+            
+        </a-assets>
+
+        <a-camera>
+          <a-entity id="curseur" cursor="fuse:true; fuseTimeout:1000" position="0 0 -0.3" geometry="primitive:sphere; radius:0.01" material="color: black; shader: flat; opacity: 0.5"></a-entity>
+        </a-camera>
+
+        <a-entity gltf-model="#glasshouse" position="0 0 0" scale="0.9 0.9 0.9" rotation="0 90 0">
+          <a-entity gltf-model="#plant2" position="-0.235 0.348 -2.829" scale="0.5 0.5 0.5" growable></a-entity>
+          <a-entity gltf-model="#plant2" position="-3.856 0.365 2.749" scale="0.5 0.5 0.5" growable></a-entity>
+          <a-entity gltf-model="#plant1" position="-2.313 1.469 -3.813" scale="0.5 0.5 0.5" rotation="0 -174 0" growable></a-entity>
+          <a-entity gltf-model="#plant1" position="6.211 1.479 1.384" scale="0.5 0.5 0.5" rotation="0 116 0" growable></a-entity>
+          <a-entity gltf-model="#flower1" position="3.927 0.483 -3.984" scale="0.5 0.5 0.5" growable></a-entity>
+          <a-entity gltf-model="#flower2" position="0.696 1.528 -3.796" scale="0.5 0.5 0.5" growable></a-entity>
+          <a-entity gltf-model="#flower2" position="-3.584 1.449 -3.559" scale="0.5 0.5 0.5" growable></a-entity>
+          <a-entity gltf-model="#flower2" position="-2.866 1.541 4.076" scale="0.5 0.5 0.5" growable></a-entity>
+          <a-entity gltf-model="#flower3" position="-0.328 1.56 3.61" scale="0.5 0.5 0.5" growable></a-entity>
+          <a-entity gltf-model="#flower4" position="5.836 1.44 0.573" scale="0.5 0.5 0.5" rotation="0 147 0" growable></a-entity>
+          <a-entity gltf-model="#flower5" position="6.315 1.399 -0.306" scale="0.5 0.5 0.5" rotation="0 -96 0" growable></a-entity>
+          <a-entity gltf-model="#flower5" position="-4.282 1.434 4.127" scale="0.5 0.5 0.5" rotation="0 165 0" growable></a-entity>
+          <a-entity gltf-model="#flower6" position="-1.182 1.42 -3.497" scale="0.5 0.5 0.5" rotation="0 -20.5 0" growable></a-entity>
+          <a-entity gltf-model="#flower6" position="1.802 1.525 3.921" scale="0.5 0.5 0.5" rotation="0 175 0" growable></a-entity>
+          <a-entity gltf-model="#flower7" position="1.819 1.389 -3.669" scale="0.5 0.5 0.5" rotation="0 -20.5 0" growable></a-entity>
+          <a-entity gltf-model="#flower8" position="6.413 1.475 -1.416" scale="0.5 0.5 0.5" rotation="0 -54 0" growable></a-entity>
+          <a-entity gltf-model="#flower8" position="-1.594 1.412 3.739" scale="0.5 0.5 0.5" rotation="0 -108 0" growable></a-entity>
+          <a-entity gltf-model="#cactus1" position="0.74 1.336 3.652" scale="0.5 0.5 0.5" rotation="0 -53 0" growable></a-entity>
+          <a-entity gltf-model="#cactus1" position="5.752 1.497 -2.751" scale="0.5 0.5 0.5" rotation="0 55.5 0" growable></a-entity>
+          <a-entity gltf-model="#cactus2" position="-4.497 1.271 -3.609" scale="0.5 0.5 0.5" rotation="0 -153 0" growable></a-entity>
+          <a-entity gltf-model="#tree1" position="4.154 0.358 3.715" scale="0.5 0.5 0.5" rotation="0 -84 0" growable></a-entity>
+        </a-entity>
+        <a-entity gltf-model="#outside" position="0 0 0" scale="0.9 0.9 0.9" rotation="0 90 0"></a-entity>
+        <a-sky color="blue"></a-sky>
+    </a-scene>
+    
 </body>
 </html>
