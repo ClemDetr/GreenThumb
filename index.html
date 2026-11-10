@@ -72,6 +72,9 @@
             <a-asset-item id="cactus2" src="assets/cactus2.glb"></a-asset-item>
             <a-asset-item id="tree1" src="assets/tree1.glb"></a-asset-item>
             
+            <sound id="wind_sound" src="sounds/wind_background.mp3"></sound>
+            <sound id="birds_sound" src="sounds/nature_birds.mp3"></sound>
+            <sound id="insects_sound" src="sounds/freesound_community-summer-criket-insect-102764.mp3"></sound>
         </a-assets>
 
         <a-camera>
@@ -79,6 +82,10 @@
         </a-camera>
 
         <a-entity gltf-model="#glasshouse" position="0 0 0" scale="0.9 0.9 0.9" rotation="0 90 0">
+          <a-sound src="#wind_sound" autoplay="true" loop="true" rollOffFactor="0" volume="0.2"></a-sound>
+          <a-sound src="#birds_sound" autoplay="true" loop="true" rollOffFactor="0" volume="0.2"></a-sound>
+          <a-sound src="#insects_sound" autoplay="true" loop="true" rollOffFactor="0" volume="0.2"></a-sound>
+
           <a-entity gltf-model="#plant2" position="-0.235 0.348 -2.829" scale="0.5 0.5 0.5" growable></a-entity>
           <a-entity gltf-model="#plant2" position="-3.856 0.365 2.749" scale="0.5 0.5 0.5" growable></a-entity>
           <a-entity gltf-model="#plant1" position="-2.313 1.469 -3.813" scale="0.5 0.5 0.5" rotation="0 -174 0" growable></a-entity>
