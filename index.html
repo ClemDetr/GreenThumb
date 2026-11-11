@@ -9,6 +9,7 @@
 <body>
     <script>
       AFRAME.registerComponent('growable', {
+        //schéma pour définir les propriétés du composant
       schema: {
         from:     { type: 'vec3',   default: { x: 0.5, y: 0.5, z: 0.5 } },
         to:       { type: 'vec3',   default: { x: 1.8, y: 1.8, z: 1.8 } },
@@ -18,17 +19,22 @@
       },
 
       init: function () {
+        //appel reférentiel pour l'élément et les données du composant
         const el = this.el;
         const data = this.data;
         this.growing = false;
         this.hasGrown = false;
 
+        //fonction pour gérer le clic sur l'élément
         this.onClick = () => {
+          //vérifie si la plante est déjà en train de grandir ou si elle a déjà grandi
           if (this.growing || (data.once && this.hasGrown)) return;
           this.growing = true;
 
+          //définir l'échelle avant de commencer l'animation
           el.setAttribute('scale', data.from);
 
+          //ajouter l'animation de croissance à la plante
           el.setAttribute('animation__grow', {
             property: 'scale',
             from: `${data.from.x} ${data.from.y} ${data.from.z}`,
@@ -39,6 +45,7 @@
           });
         };
 
+        //indique que la croissance est terminée pour empêcher une autre croissance
         this.onComplete = () => {
           this.growing = false;
           this.hasGrown = true;
@@ -48,6 +55,7 @@
         el.addEventListener('animationcomplete__grow', this.onComplete);
       },
 
+      //supprime les écouteurs d'événements lorsque le composant est retiré
       remove: function () {
         this.el.removeEventListener('click', this.onClick);
         this.el.removeEventListener('animationcomplete__grow', this.onComplete);
@@ -55,6 +63,7 @@
   });
   </script>
   <a-scene stats>
+      <!-- chargement des assets 3D et audio -->
       <a-assets>
           <a-asset-item id="glasshouse" src="assets/serre.glb"></a-asset-item>
           <a-asset-item id="outside" src="assets/outside.glb"></a-asset-item>
@@ -78,10 +87,12 @@
           <sound id="grow_sound" src="sounds/balloon.mp3"></sound>
       </a-assets>
 
+      <!-- ajout d'une caméra avec un curseur pour interagir avec les plantes -->
       <a-camera>
         <a-entity id="curseur" cursor="fuse:true; fuseTimeout:1000" position="0 0 -0.3" geometry="primitive:sphere; radius:0.01" material="color: black; shader: flat; opacity: 0.5"></a-entity>
       </a-camera>
 
+      <!-- ajout de la serre et des plantes avec le composant growable pour permettre la croissance des plantes -->
       <a-entity gltf-model="#glasshouse" position="0 0 0" scale="0.7 0.7 0.7" rotation="0 90 0">
         <a-sound src="#wind_sound" autoplay="true" loop="true" rollOffFactor="0" volume="0.2"></a-sound>
         <a-sound src="#birds_sound" autoplay="true" loop="true" rollOffFactor="0" volume="0.2"></a-sound>
@@ -110,6 +121,8 @@
         <a-entity gltf-model="#cactus2" position="-4.497 1.271 -3.609" scale="0.5 0.5 0.5" rotation="0 -153 0" growable></a-entity>
         <a-entity gltf-model="#tree1" position="4.154 0.358 3.715" scale="0.5 0.5 0.5" rotation="0 -84 0" growable></a-entity>
       </a-entity>
+
+      <!-- ajout de l'environnement extérieur pour la scène -->
       <a-entity gltf-model="#outside" position="0 0 0" scale="0.7 0.7 0.7" rotation="0 90 0"></a-entity>
       <a-sky color="#43b5db"></a-sky>
   </a-scene>
