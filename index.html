@@ -7,112 +7,112 @@
     <script src="https://aframe.io/releases/1.8.0/aframe.min.js"></script>
 </head>
 <body>
-     <script>
-        AFRAME.registerComponent('growable', {
-        schema: {
-          from:     { type: 'vec3',   default: { x: 0.5, y: 0.5, z: 0.5 } },
-          to:       { type: 'vec3',   default: { x: 1.8, y: 1.8, z: 1.8 } },
-          dur:      { type: 'number', default: 3000 },
-          easing:   { type: 'string', default: 'easeOutQuad' },
-          once:     { type: 'boolean', default: true }
-        },
+    <script>
+      AFRAME.registerComponent('growable', {
+      schema: {
+        from:     { type: 'vec3',   default: { x: 0.5, y: 0.5, z: 0.5 } },
+        to:       { type: 'vec3',   default: { x: 1.8, y: 1.8, z: 1.8 } },
+        dur:      { type: 'number', default: 3000 },
+        easing:   { type: 'string', default: 'easeOutQuad' },
+        once:     { type: 'boolean', default: true }
+      },
 
-        init: function () {
-          const el = this.el;
-          const data = this.data;
+      init: function () {
+        const el = this.el;
+        const data = this.data;
+        this.growing = false;
+        this.hasGrown = false;
+
+        this.onClick = () => {
+          if (this.growing || (data.once && this.hasGrown)) return;
+          this.growing = true;
+
+          el.setAttribute('scale', data.from);
+
+          el.setAttribute('animation__grow', {
+            property: 'scale',
+            from: `${data.from.x} ${data.from.y} ${data.from.z}`,
+            to:   `${data.to.x} ${data.to.y} ${data.to.z}`,
+            dur: data.dur,
+            easing: data.easing,
+            loop: false,
+          });
+        };
+
+        this.onComplete = () => {
           this.growing = false;
-          this.hasGrown = false;
+          this.hasGrown = true;
+        };
 
-          this.onClick = () => {
-            if (this.growing || (data.once && this.hasGrown)) return;
-            this.growing = true;
+        el.addEventListener('click', this.onClick);
+        el.addEventListener('animationcomplete__grow', this.onComplete);
+      },
 
-            el.setAttribute('scale', data.from);
+      remove: function () {
+        this.el.removeEventListener('click', this.onClick);
+        this.el.removeEventListener('animationcomplete__grow', this.onComplete);
+    }
+  });
+  </script>
+  <a-scene stats>
+      <a-assets>
+          <a-asset-item id="glasshouse" src="assets/serre.glb"></a-asset-item>
+          <a-asset-item id="outside" src="assets/outside.glb"></a-asset-item>
+          <a-asset-item id="flower1" src="assets/flower1.glb"></a-asset-item>
+          <a-asset-item id="flower2" src="assets/flower2.glb"></a-asset-item>
+          <a-asset-item id="flower3" src="assets/flower3.glb"></a-asset-item>
+          <a-asset-item id="flower4" src="assets/flower4.glb"></a-asset-item>
+          <a-asset-item id="flower5" src="assets/flower5.glb"></a-asset-item>
+          <a-asset-item id="flower6" src="assets/flower6.glb"></a-asset-item>
+          <a-asset-item id="flower7" src="assets/flower7.glb"></a-asset-item>
+          <a-asset-item id="flower8" src="assets/flower8.glb"></a-asset-item>
+          <a-asset-item id="plant1" src="assets/plant1.glb"></a-asset-item>
+          <a-asset-item id="plant2" src="assets/plant2.glb"></a-asset-item>
+          <a-asset-item id="cactus1" src="assets/cactus1.glb"></a-asset-item>
+          <a-asset-item id="cactus2" src="assets/cactus2.glb"></a-asset-item>
+          <a-asset-item id="tree1" src="assets/tree1.glb"></a-asset-item>
+          
+          <sound id="wind_sound" src="sounds/wind_background.mp3"></sound>
+          <sound id="birds_sound" src="sounds/nature_birds.mp3"></sound>
+          <sound id="insects_sound" src="sounds/freesound_community-summer-criket-insect-102764.mp3"></sound>
+          <sound id="grow_sound" src="sounds/balloon.mp3"></sound>
+      </a-assets>
 
-            el.setAttribute('animation__grow', {
-              property: 'scale',
-              from: `${data.from.x} ${data.from.y} ${data.from.z}`,
-              to:   `${data.to.x} ${data.to.y} ${data.to.z}`,
-              dur: data.dur,
-              easing: data.easing,
-              loop: false,
-            });
-          };
+      <a-camera>
+        <a-entity id="curseur" cursor="fuse:true; fuseTimeout:1000" position="0 0 -0.3" geometry="primitive:sphere; radius:0.01" material="color: black; shader: flat; opacity: 0.5"></a-entity>
+      </a-camera>
 
-          this.onComplete = () => {
-            this.growing = false;
-            this.hasGrown = true;
-          };
+      <a-entity gltf-model="#glasshouse" position="0 0 0" scale="0.7 0.7 0.7" rotation="0 90 0">
+        <a-sound src="#wind_sound" autoplay="true" loop="true" rollOffFactor="0" volume="0.2"></a-sound>
+        <a-sound src="#birds_sound" autoplay="true" loop="true" rollOffFactor="0" volume="0.2"></a-sound>
+        <a-sound src="#insects_sound" autoplay="true" loop="true" rollOffFactor="0" volume="0.2"></a-sound>
 
-          el.addEventListener('click', this.onClick);
-          el.addEventListener('animationcomplete__grow', this.onComplete);
-        },
-
-        remove: function () {
-          this.el.removeEventListener('click', this.onClick);
-          this.el.removeEventListener('animationcomplete__grow', this.onComplete);
-      }
-    });
-    </script>
-    <a-scene stats>
-        <a-assets>
-            <a-asset-item id="glasshouse" src="assets/serre.glb"></a-asset-item>
-            <a-asset-item id="outside" src="assets/outside.glb"></a-asset-item>
-            <a-asset-item id="flower1" src="assets/flower1.glb"></a-asset-item>
-            <a-asset-item id="flower2" src="assets/flower2.glb"></a-asset-item>
-            <a-asset-item id="flower3" src="assets/flower3.glb"></a-asset-item>
-            <a-asset-item id="flower4" src="assets/flower4.glb"></a-asset-item>
-            <a-asset-item id="flower5" src="assets/flower5.glb"></a-asset-item>
-            <a-asset-item id="flower6" src="assets/flower6.glb"></a-asset-item>
-            <a-asset-item id="flower7" src="assets/flower7.glb"></a-asset-item>
-            <a-asset-item id="flower8" src="assets/flower8.glb"></a-asset-item>
-            <a-asset-item id="plant1" src="assets/plant1.glb"></a-asset-item>
-            <a-asset-item id="plant2" src="assets/plant2.glb"></a-asset-item>
-            <a-asset-item id="cactus1" src="assets/cactus1.glb"></a-asset-item>
-            <a-asset-item id="cactus2" src="assets/cactus2.glb"></a-asset-item>
-            <a-asset-item id="tree1" src="assets/tree1.glb"></a-asset-item>
-            
-            <sound id="wind_sound" src="sounds/wind_background.mp3"></sound>
-            <sound id="birds_sound" src="sounds/nature_birds.mp3"></sound>
-            <sound id="insects_sound" src="sounds/freesound_community-summer-criket-insect-102764.mp3"></sound>
-            <sound id="grow_sound" src="sounds/balloon.mp3"></sound>
-        </a-assets>
-
-        <a-camera>
-          <a-entity id="curseur" cursor="fuse:true; fuseTimeout:1000" position="0 0 -0.3" geometry="primitive:sphere; radius:0.01" material="color: black; shader: flat; opacity: 0.5"></a-entity>
-        </a-camera>
-
-        <a-entity gltf-model="#glasshouse" position="0 0 0" scale="0.9 0.9 0.9" rotation="0 90 0">
-          <a-sound src="#wind_sound" autoplay="true" loop="true" rollOffFactor="0" volume="0.2"></a-sound>
-          <a-sound src="#birds_sound" autoplay="true" loop="true" rollOffFactor="0" volume="0.2"></a-sound>
-          <a-sound src="#insects_sound" autoplay="true" loop="true" rollOffFactor="0" volume="0.2"></a-sound>
-
-          <a-entity gltf-model="#plant2" position="-0.235 0.348 -2.829" scale="0.5 0.5 0.5" growable></a-entity>
-          <a-entity gltf-model="#plant2" position="-3.856 0.365 2.749" scale="0.5 0.5 0.5" growable></a-entity>
-          <a-entity gltf-model="#plant1" position="-2.313 1.469 -3.813" scale="0.5 0.5 0.5" rotation="0 -174 0" growable></a-entity>
-          <a-entity gltf-model="#plant1" position="6.211 1.479 1.384" scale="0.5 0.5 0.5" rotation="0 116 0" growable></a-entity>
-          <a-entity gltf-model="#flower1" position="3.927 0.483 -3.984" scale="0.5 0.5 0.5" growable></a-entity>
-          <a-entity gltf-model="#flower2" position="0.696 1.528 -3.796" scale="0.5 0.5 0.5" growable></a-entity>
-          <a-entity gltf-model="#flower2" position="-3.584 1.449 -3.559" scale="0.5 0.5 0.5" growable="to: 1.1 1.1 1.1"></a-entity>
-          <a-entity gltf-model="#flower2" position="-2.866 1.541 4.076" scale="0.5 0.5 0.5" growable></a-entity>
-          <a-entity gltf-model="#flower3" position="-0.328 1.56 3.61" scale="0.5 0.5 0.5" growable></a-entity>
-          <a-entity gltf-model="#flower4" position="5.836 1.44 0.573" scale="0.5 0.5 0.5" rotation="0 147 0" growable></a-entity>
-          <a-entity gltf-model="#flower5" position="6.315 1.399 -0.306" scale="0.5 0.5 0.5" rotation="0 -96 0" growable></a-entity>
-          <a-entity gltf-model="#flower5" position="-4.282 1.434 4.127" scale="0.5 0.5 0.5" rotation="0 165 0" growable></a-entity>
-          <a-entity gltf-model="#flower6" position="-1.182 1.42 -3.497" scale="0.5 0.5 0.5" rotation="0 -20.5 0" growable></a-entity>
-          <a-entity gltf-model="#flower6" position="5.842 1.42 2.542" scale="0.5 0.5 0.5" rotation="0 -116 0" growable="to: 2.2 2.2 2.2"></a-entity>
-          <a-entity gltf-model="#flower6" position="1.802 1.525 3.921" scale="0.5 0.5 0.5" rotation="0 175 0" growable></a-entity>
-          <a-entity gltf-model="#flower7" position="1.819 1.389 -3.669" scale="0.5 0.5 0.5" rotation="0 -20.5 0" growable></a-entity>
-          <a-entity gltf-model="#flower8" position="6.413 1.475 -1.416" scale="0.5 0.5 0.5" rotation="0 -54 0" growable></a-entity>
-          <a-entity gltf-model="#flower8" position="-1.594 1.412 3.739" scale="0.5 0.5 0.5" rotation="0 -108 0" growable></a-entity>
-          <a-entity gltf-model="#cactus1" position="0.74 1.336 3.652" scale="0.5 0.5 0.5" rotation="0 -53 0" growable></a-entity>
-          <a-entity gltf-model="#cactus1" position="5.752 1.497 -2.751" scale="0.5 0.5 0.5" rotation="0 55.5 0" growable="to: 1.4 1 1.4"></a-entity>
-          <a-entity gltf-model="#cactus2" position="-4.497 1.271 -3.609" scale="0.5 0.5 0.5" rotation="0 -153 0" growable></a-entity>
-          <a-entity gltf-model="#tree1" position="4.154 0.358 3.715" scale="0.5 0.5 0.5" rotation="0 -84 0" growable></a-entity>
-        </a-entity>
-        <a-entity gltf-model="#outside" position="0 0 0" scale="0.7 0.7 0.7" rotation="0 90 0"></a-entity>
-        <a-sky color="#43b5db"></a-sky>
-    </a-scene>
-    
+        <a-entity gltf-model="#plant2" position="-0.235 0.348 -2.829" scale="0.5 0.5 0.5" growable></a-entity>
+        <a-entity gltf-model="#plant2" position="-3.856 0.365 2.749" scale="0.5 0.5 0.5" growable></a-entity>
+        <a-entity gltf-model="#plant1" position="-2.313 1.469 -3.813" scale="0.5 0.5 0.5" rotation="0 -174 0" growable></a-entity>
+        <a-entity gltf-model="#plant1" position="6.211 1.479 1.384" scale="0.5 0.5 0.5" rotation="0 116 0" growable></a-entity>
+        <a-entity gltf-model="#flower1" position="3.927 0.483 -3.984" scale="0.5 0.5 0.5" growable></a-entity>
+        <a-entity gltf-model="#flower2" position="0.696 1.528 -3.796" scale="0.5 0.5 0.5" growable></a-entity>
+        <a-entity gltf-model="#flower2" position="-3.584 1.449 -3.559" scale="0.5 0.5 0.5" growable="to: 1.1 1.1 1.1"></a-entity>
+        <a-entity gltf-model="#flower2" position="-2.866 1.541 4.076" scale="0.5 0.5 0.5" growable></a-entity>
+        <a-entity gltf-model="#flower3" position="-0.328 1.56 3.61" scale="0.5 0.5 0.5" growable></a-entity>
+        <a-entity gltf-model="#flower4" position="5.836 1.44 0.573" scale="0.5 0.5 0.5" rotation="0 147 0" growable></a-entity>
+        <a-entity gltf-model="#flower5" position="6.315 1.399 -0.306" scale="0.5 0.5 0.5" rotation="0 -96 0" growable></a-entity>
+        <a-entity gltf-model="#flower5" position="-4.282 1.434 4.127" scale="0.5 0.5 0.5" rotation="0 165 0" growable></a-entity>
+        <a-entity gltf-model="#flower6" position="-1.182 1.42 -3.497" scale="0.5 0.5 0.5" rotation="0 -20.5 0" growable></a-entity>
+        <a-entity gltf-model="#flower6" position="5.842 1.42 2.542" scale="0.5 0.5 0.5" rotation="0 -116 0" growable="to: 2.2 2.2 2.2"></a-entity>
+        <a-entity gltf-model="#flower6" position="1.802 1.525 3.921" scale="0.5 0.5 0.5" rotation="0 175 0" growable></a-entity>
+        <a-entity gltf-model="#flower7" position="1.819 1.389 -3.669" scale="0.5 0.5 0.5" rotation="0 -20.5 0" growable></a-entity>
+        <a-entity gltf-model="#flower8" position="6.413 1.475 -1.416" scale="0.5 0.5 0.5" rotation="0 -54 0" growable></a-entity>
+        <a-entity gltf-model="#flower8" position="-1.594 1.412 3.739" scale="0.5 0.5 0.5" rotation="0 -108 0" growable></a-entity>
+        <a-entity gltf-model="#cactus1" position="0.74 1.336 3.652" scale="0.5 0.5 0.5" rotation="0 -53 0" growable></a-entity>
+        <a-entity gltf-model="#cactus1" position="5.752 1.497 -2.751" scale="0.5 0.5 0.5" rotation="0 55.5 0" growable="to: 1.4 1 1.4"></a-entity>
+        <a-entity gltf-model="#cactus2" position="-4.497 1.271 -3.609" scale="0.5 0.5 0.5" rotation="0 -153 0" growable></a-entity>
+        <a-entity gltf-model="#tree1" position="4.154 0.358 3.715" scale="0.5 0.5 0.5" rotation="0 -84 0" growable></a-entity>
+      </a-entity>
+      <a-entity gltf-model="#outside" position="0 0 0" scale="0.7 0.7 0.7" rotation="0 90 0"></a-entity>
+      <a-sky color="#43b5db"></a-sky>
+  </a-scene>
+  
 </body>
 </html>
