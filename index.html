@@ -90,7 +90,7 @@
 
       <!-- ajout d'une caméra avec un curseur pour interagir avec les plantes -->
       <a-camera>
-        <a-entity id="curseur" cursor="fuse:true; fuseTimeout:1000" position="0 0 -0.1" geometry="primitive:sphere; radius:0.001" material="color: black; shader: flat; opacity: 0.5"></a-entity>
+        <a-entity id="curseur" cursor="fuse:true; fuseTimeout:1000" position="0 0 -0.5" geometry="primitive:sphere; radius:0.01" material="color: black; shader: flat; opacity: 0.5"></a-entity>
       </a-camera>
 
       <!-- ajout de la serre et des plantes avec le composant growable pour permettre la croissance des plantes -->
@@ -127,6 +127,8 @@
       <a-entity gltf-model="#outside" position="0 0 0" scale="0.7 0.7 0.7" rotation="0 90 0"></a-entity>
       <a-sky color="#43b5db"></a-sky>
   </a-scene>
-  
+  <script>
+    //script pour restreindre les mouvements de la caméra à l'intérieur de la serre
+  </script>
 </body>
 </html>
