@@ -88,7 +88,7 @@
       </a-assets>
 
       <!-- ajout d'une caméra avec un curseur pour interagir avec les plantes -->
-      <a-camera>
+      <a-camera boundaries>
         <a-entity id="curseur" cursor="fuse:true; fuseTimeout:1000" position="0 0 -0.5" geometry="primitive:sphere; radius:0.01" material="color: black; shader: flat; opacity: 0.5"></a-entity>
       </a-camera>
 
@@ -128,6 +128,26 @@
   </a-scene>
   <script>
     //script pour restreindre les mouvements de la caméra à l'intérieur de la serre
+    AFRAME.registerComponent('boundaries', {
+      schema: {
+        minX: { type: 'number', default: -3 },
+        maxX: { type: 'number', default: 3 },
+        minZ: { type: 'number', default: -5 },
+        maxZ: { type: 'number', default: 4 }
+      },
+
+      tick: function () {
+        const position = this.el.getAttribute('position');
+        const data = this.data;
+
+        //restreindre la position de la caméra aux limites définies
+        if (position.x < data.minX) position.x = data.minX;
+        if (position.x > data.maxX) position.x = data.maxX;
+        if (position.z < data.minZ) position.z = data.minZ;
+        if (position.z > data.maxZ) position.z = data.maxZ;
+
+      }
+    });
   </script>
 </body>
 </html>
